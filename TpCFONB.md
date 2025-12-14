@@ -547,40 +547,70 @@ Un fichier CFONB120 contient plusieurs **blocs de compte**, chacun composé de :
 
 #### Enregistrement 01 - Ancien solde
 
-| Position | Longueur | Contenu | Description |
-|----------|----------|---------|-------------|
-| 1-2 | 2 | `01` | Code enregistrement |
-| 3-7 | 5 | `NNNNN` | Code banque |
-| 8-12 | 5 | `NNNNN` | Code guichet |
-| 13-15 | 3 | `EUR` | Code devise (ISO) |
-| 16 | 1 | `N` | Nombre de décimales |
-| 17-18 | 2 | `  ` | Zone réservée |
-| 19-29 | 11 | `NNNNNNNNNNN` | Numéro de compte |
-| 30-31 | 2 | `  ` | Zone réservée |
-| 32-37 | 6 | `JJMMAA` | Date (format français) |
-| 38-88 | 51 | `TEXTE` | Nom du titulaire + libellé compte |
-| 89-102 | 14 | `NNNNNNNNNNNNNX` | Montant (13 chiffres + signe) |
-| 103-120 | 18 | Zone réservée | - |
+| Position | Longueur | Contenu          | Description                              |
+|----------|----------|------------------|------------------------------------------|
+| 1-2      | 2        | `01`             | Code enregistrement                      |
+| 3-7      | 5        | `NNNNN`          | Code banque                              |
+| 8-11     | 4        | `    `           | Zone réservée                            |
+| 12-16    | 5        | `NNNNN`          | Code guichet                             |
+| 17-19    | 3        | `EUR`            | Code devise (ISO)                        |
+| 20       | 1        | `N`              | Nombre de décimales                      |
+| 21       | 1        | ` `              | Zone réservée                            |
+| 22-32    | 11       | `NNNNNNNNNNN`    | Numéro de compte                         |
+| 33-34    | 2        | `  `             | Zone réservée                            |
+| 35-40    | 6        | `JJMMAA`         | Date de l'ancien solde (format français) |
+| 41-90    | 50       | `TEXTE`          | Nom du titulaire + libellé compte        |
+| 91-104   | 14       | `NNNNNNNNNNNNNX` | Montant (13 chiffres + signe)            |
+| 105-120  | 16       | ` `              | Zone réservée                            |
 
 #### Enregistrement 04 - Opération
 
-| Position | Longueur | Contenu | Description |
-|----------|----------|---------|-------------|
-| 1-2 | 2 | `04` | Code enregistrement |
-| 3-7 | 5 | `NNNNN` | Code banque |
-| 8-12 | 5 | `NNNNN` | Code guichet interne |
-| 13-15 | 3 | `EUR` | Code devise |
-| 16 | 1 | `N` | Nombre de décimales |
-| 17-18 | 2 | `  ` | Zone réservée |
-| 19-29 | 11 | `NNNNNNNNNNN` | Numéro de compte |
-| 30-31 | 2 | `XX` | Code opération interbancaire |
-| 32-37 | 6 | `JJMMAA` | Date opération |
-| 38-40 | 3 | `NNN` | Code motif de rejet |
-| 41-46 | 6 | `JJMMAA` | Date valeur |
-| 47-79 | 33 | `TEXTE` | Libellé opération |
-| 80-87 | 8 | Zone réservée | - |
-| 88-101 | 14 | `NNNNNNNNNNNNNX` | Montant |
-| 102-120 | 19 | `TEXTE` | Référence |
+| Position | Longueur | Contenu          | Description                   |
+|----------|----------|------------------|-------------------------------|
+| 1-2      | 2        | `04`             | Code enregistrement           |
+| 3-7      | 5        | `NNNNN`          | Code banque                   |
+| 8-11     | 4        | `XXXX`           | Code opération interne        |
+| 12-16    | 5        | `NNNNN`          | Code guichet                  |
+| 17-19    | 3        | `EUR`            | Code devise (ISO)             |
+| 20       | 1        | `N`              | Nombre de décimales           |
+| 21       | 1        | ` `              | Zone réservée                 |
+| 22-32    | 11       | `NNNNNNNNNNN`    | Numéro de compte              |
+| 33-34    | 2        | `XX`             | Code opération interbancaire  |
+| 35-40    | 6        | `JJMMAA`         | Date opération                |
+| 41-43    | 3        | `NNN`            | Code motif de rejet           |
+| 44-49    | 6        | `JJMMAA`         | Date valeur                   |
+| 50-80    | 31       | `TEXTE`          | Libellé opération             |
+| 81-82    | 2        | ` `              | Zone réservée                 |
+| 83-89    | 7        | `NNNNNNN`        | Numéro d'écriture             |
+| 90       | 1        | `X`              | Indice exonération commission |
+| 91       | 1        | `X`              | Indice d'indisponibilité      |
+| 92-104   | 13       | `NNNNNNNNNNNNNX` | Montant (avec le signe)       |
+| 105-120  | 16       | `TEXTE`          | Référence                     |
+
+> **Note** : La zone "Code opération interne" est propre à chaque établissement bancaire. Elle permet à la banque d'identifier le type d'opération dans son système interne.
+
+> **Attention** : Le montant du mouvement fait **13 caractères**, contrairement au montant des soldes qui font **14 caractères**. Cette différence s'explique par la présence des zones indices en positions 90 et 91.
+
+#### Enregistrement 05 - Complément à l'enregistrement 04
+
+Cet enregistrement **facultatif** permet d'ajouter des informations complémentaires à une opération (04). Il peut y avoir plusieurs enregistrements 05 après un même 04.
+
+| Position | Longueur | Contenu          | Description                            |
+|----------|----------|------------------|----------------------------------------|
+| 1-2      | 2        | `05`             | Code enregistrement                    |
+| 3-40     | 38       | *(identique 04)* | Même structure que l'enregistrement 04 |
+| 41-45    | 5        | `     `          | Zone réservée                          |
+| 46-48    | 3        | `XXX`            | Qualifiant                             |
+| 49-118   | 70       | `TEXTE`          | Informations complémentaires           |
+| 119-120  | 2        | `  `             | Zone réservée                          |
+
+**Qualifiants courants :**
+- **`LIB` : Libellé complémentaire**
+- **`MMO` : Montant et monnaie d'origine**
+- `LCC` : Libellé complémentaire (variante)
+- `NBE` : Nom du bénéficiaire/émetteur
+- `REF` : Référence de l'opération
+- `BDB` : BIC de la banque du bénéficiaire
 
 #### Enregistrement 07 - Nouveau solde
 
@@ -588,7 +618,7 @@ Structure identique à l'enregistrement 01, avec le code `07`.
 
 ### 4.5 Encodage des montants
 
-**Point critique** : Le dernier caractère du montant encode à la fois le chiffre des unités ET le signe.
+**Point critique** : Le dernier caractère du montant encode à la fois le chiffre des unités ET le signe *(crédit/débit)*.
 
 | Dernier caractère | Chiffre | Signe |
 |-------------------|---------|-------|
@@ -605,10 +635,35 @@ Structure identique à l'enregistrement 01, avec le code `07`.
 |-------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
 | Valeur | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
 
-**Exemple** : `0000000139719C` → 1397,19 € (crédit, car `C` = 3 en crédit)
-- Les 13 premiers chiffres : `0000000139719` = 139719
-- Le caractère `C` indique : chiffre 3, signe crédit
-- Montant final : 1397,19 + 0,03 = **1397,22 € (crédit)**
+
+**Exemple 1** : `0000001925107{` → **19 251,07 € (crédit)**
+
+1. Les 13 premiers caractères : `0000001925107`
+2. Le caractère `{` indique :
+    - Chiffre : **0**
+    - Signe : **crédit** (+)
+3. Montant complet : `0000001925107` & `0` = `00000019251070`
+4. Avec 2 décimales : 19 251 070 / 100 = **19 251,07 € (crédit)**
+
+
+**Exemple 2** : `0000000139719C` → **13 971,93 € (crédit)**
+
+1. Les 13 premiers caractères : `0000000139719`
+2. Le caractère `C` indique :
+    - Chiffre : **3**
+    - Signe : **crédit** (+)
+3. Montant complet : `0000000139719` & `3` = `00000001397193`
+4. Avec 2 décimales : 1 397 193 / 100 = **13 971,93 € (crédit)**
+
+
+**Exemple 3** : `0000000002421}` → **242,10 € (débit)**
+
+1. Les 13 premiers caractères : `0000000002421`
+2. Le caractère `}` indique :
+    - Chiffre : **0**
+    - Signe : **débit** (−)
+3. Montant complet : `0000000002421` & `0` = `00000000024210`
+4. Avec 2 décimales : 24 210 / 100 = **242,10 € (débit)**
 
 > **Attention** : Une erreur sur le décodage du signe inverse le sens de l'opération !
 
@@ -780,7 +835,7 @@ typedef struct {
     int nbDecimales;
     char numeroCompte[12];   // 11 + \0
     DateCFONB date;
-    char titulaire[52];      // 51 + \0
+    char titulaire[51];      // 50 + \0
     Montant solde;
 } InfoCompte;
 
@@ -790,9 +845,9 @@ typedef struct {
     char codeOperation[3];   // 2 + \0
     DateCFONB dateOperation;
     DateCFONB dateValeur;
-    char libelle[34];        // 33 + \0
+    char libelle[32];        // 31 + \0
     Montant montant;
-    char reference[20];      // 19 + \0
+    char reference[17];      // 16 + \0
     // Compléments éventuels (04 peut avoir plusieurs 05)
     char complements[5][71]; // Max 5 compléments de 70 chars
     int nbComplements;
@@ -822,7 +877,7 @@ typedef struct {
 // Statistiques d'un compte
 typedef struct {
     char numeroCompte[12];
-    char titulaire[52];
+    char titulaire[51];
     Montant soldeInitial;
     Montant soldeFinal;
     int nbDebits;
@@ -1007,7 +1062,7 @@ Votre code sera évalué sur :
 Les positions dans la norme CFONB sont en **base 1**. En C, les tableaux commencent à 0.
 
 ```c
-// Position 19-29 en CFONB : indices 18 à 28 en C
+// Position 22-32 en CFONB (numéro de compte) : indices 21 à 31 en C
 void extraireChamp(const char* ligne, int debut, int fin, char* dest) {
     int longueur = fin - debut + 1;
     strncpy(dest, ligne + debut - 1, longueur);
@@ -1024,12 +1079,13 @@ void extraireChamp(const char* ligne, int debut, int fin, char* dest) {
 ```c
 Montant decoderMontant(const char* montantStr, int nbDecimales) {
     Montant m;
-    char dernierChar = montantStr[13];  // 14ème caractère
+    int longueur = strlen(montantStr);  // 14 pour types 01/07, 13 pour type 04
+    char dernierChar = montantStr[longueur - 1];
 
-    // Extraire les 13 premiers caractères comme nombre
-    char partie[14];
-    strncpy(partie, montantStr, 13);
-    partie[13] = '\0';
+    // Extraire les (longueur-1) premiers caractères comme nombre
+    char partie[15];
+    strncpy(partie, montantStr, longueur - 1);
+    partie[longueur - 1] = '\0';
     long valeur = atol(partie) * 10;  // Multiplier par 10 pour le dernier chiffre
 
     // Décoder le dernier caractère
@@ -1046,8 +1102,15 @@ Montant decoderMontant(const char* montantStr, int nbDecimales) {
         m.sens = SENS_DEBIT;
         valeur += (dernierChar - 'J' + 1);
     }
+    
+    // Normaliser en centimes (Déjà en centimes si nbDecimales = 2)
+    if (nbDecimales == 0) {
+        valeur *= 100;  // Pas de décimales → multiplier par 100
+    } else if (nbDecimales == 1) {
+        valeur *= 10;   // 1 décimale → multiplier par 10
+    }
 
-    m.centimes = valeur;  // Déjà en centimes si nbDecimales = 2
+    m.centimes = valeur;
     return m;
 }
 ```
@@ -1211,7 +1274,7 @@ Votre README doit contenir :
 
 ## Annexe A - Tables de codes
 
-### A.1 Codes opération interbancaires (position 30-31)
+### A.1 Codes opération interbancaires (position 33-34)
 
 | Code | Signification |
 |------|---------------|
@@ -1222,7 +1285,7 @@ Votre README doit contenir :
 | `17` | Prélèvement |
 | `27` | Frais bancaires |
 
-### A.2 Exemple de codes motif de rejet (position 38-40)
+### A.2 Exemple de codes motif de rejet (position 41-43)
 
 | Code | Signification |
 |------|---------------|
@@ -1283,20 +1346,20 @@ $ ./cfonb_analyzer stats data/SOBANK_2025-11-30.txt
 === STATISTIQUES CFONB ===
 
 Compte: 02863280452 - SIVASOORIYALINGAM SIVALOGINI
-  Solde initial: 1 397,19 € (CR)
-  Solde final:   1 397,19 € (CR)
+  Solde initial: 13 971,93 € (CR)
+  Solde final:   13 971,93 € (CR)
   Opérations:    0 débits / 0 crédits
   Total débits:  0,00 €
   Total crédits: 0,00 €
   Variation:     0,00 €
 
 Compte: 02150880432 - DE FI CO
-  Solde initial: 19 251,07 € (CR)
-  Solde final:   19 245,07 € (CR)
+  Solde initial: 192 510,70 € (CR)
+  Solde final:   192 450,70 € (CR)
   Opérations:    1 débit / 0 crédit
-  Total débits:  6,00 €
+  Total débits:  60,00 €
   Total crédits: 0,00 €
-  Variation:     -6,00 €
+  Variation:     -60,00 €
 
 [...]
 ```
@@ -1313,7 +1376,7 @@ Résultats: 1 opération(s) trouvée(s)
 
 Date       | Montant      | Libellé
 -----------|--------------|--------------------------------
-29/11/2025 | -6,00 €      | CARTE 28/11 LE SQUARE KG PARIS
+29/11/2025 | -60,00 €     | CARTE 28/11 LE SQUARE KG PARIS
            |              | > MCC 5812 RESTAUR
 ```
 
