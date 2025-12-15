@@ -1,0 +1,6 @@
+"C:\Program Files (x86)\JetBrains\CLion 2024.1.4\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files (x86)/JetBrains/CLion 2024.1.4/bin/ninja/win/x64/ninja.exe" -G Ninja -S D:\Users\e2508372\CLionProjects\CFONB_Analyzer -B D:\Users\e2508372\CLionProjects\CFONB_Analyzer\cmake-build-debug
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 4.0 or higher is required.  You are running version 3.28.1
+
+
+-- Configuring incomplete, errors occurred!
