@@ -1,12 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "cfonb_parser.h"
+ #include "cfonb_parser.h"
 #include "cfonb_types.h"
 #include "cfonb_utils.h"
 
-int main(int argc, char* argv[]) {
-    Arguments args;
+int main() {
+    /*Arguments args;
     int resultat = parserArguments(argc, argv, &args);
     if (resultat <= 0) {
         afficherUsage(argv[0]);
@@ -36,6 +37,22 @@ int main(int argc, char* argv[]) {
         printf("Erreur : commande '%s' inconnue\n", args.commande);
         afficherUsage(argv[0]);
         return 1;
+    }*/
+    FILE*fp = fopen("C://Users//NICKSON//CLionProjects//CFONB_Analyser_Tchinda_Fotsa_Nickson//file.txt", "r");
+    if (fp == NULL)
+        printf("Error opening file!\n");
+    else {
+        char line[120];
+        fgets(line, 120, fp);
+        printf("%s\n", line);
+        char somme[7];
+        extraireChamp(line,35,40,somme);
+        DateCFONB date = parseDate(somme);
+        printf("Date : %d - %d - %d\n",date.jour,date.mois,date.annee);
+        extraireChamp(line,91,104,somme);
+        printf("%s\n",somme);
+        Montant montant = decoderMontant(somme,2);
+        afficherMontant(montant);
     }
     return 0;
 
