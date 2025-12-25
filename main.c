@@ -45,15 +45,40 @@ int main() {
         char line[120];
         fgets(line, 120, fp);
         printf("%s\n", line);
-        char somme[7];
-        extraireChamp(line,35,40,somme);
-        DateCFONB date = parseDate(somme);
-        printf("Date : %d - %d - %d\n",date.jour,date.mois,date.annee);
-        extraireChamp(line,91,104,somme);
-        printf("%s\n",somme);
-        Montant montant = decoderMontant(somme,2);
-        afficherMontant(montant);
-    }
+
+        InfoCompte*info = (InfoCompte*)malloc(sizeof(InfoCompte));
+        Operation*op = (Operation*)malloc(sizeof(Operation));
+        if (parseInfoCompte(line,info))
+            printf("Erreur de parsing");
+        else {
+            printf("code banque : %s\n",info->codeBanque);
+            printf("code guichet : %s\n",info->codeGuichet);
+            printf("Numero de compte : %s\n",info->numeroCompte);
+            printf("Date : %d - %d - %d\n",info->date.jour,info->date.mois,info->date.annee);
+            printf("titulaire : %s\n",info->titulaire);
+            afficherMontant(info->solde);
+            printf("devise : %s\n",info->devise);
+            fgets(line, 120, fp);
+        }
+        if (parseOperation(line,op,fp))
+            printf("Erreur de parsing");
+        else {
+            printf("\n\n-----------------operation-04--------------------\n\n");
+            printf("%s\n", line);
+            printf("numero de compte : %s\n",op->numeroCompte);
+            printf("Code operation : %s\n",op->codeOperation);
+            printf("Date operation : %d - %d - %d\n",op->dateOperation.jour,op->dateOperation.mois,op->dateOperation.annee);
+            printf("Date valeur : %d - %d - %d\n",op->dateValeur.jour,op->dateValeur.mois,op->dateValeur.annee);
+            printf("Libelle : %s\n",op->libelle);
+            afficherMontant(op->montant);
+            printf("reference : %s\n",op->reference);
+            for (int i = 0;i<op->nbComplements;i++)
+                printf("complement : %s\n",op->complements[i]);
+
+        }
+        fgets(line, 120, fp);
+        printf("%s\n", line);
+        }
     return 0;
 
 }
