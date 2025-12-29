@@ -1,13 +1,63 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
- #include "cfonb_parser.h"
+#include "cfonb_parser.h"
 #include "cfonb_types.h"
 #include "cfonb_utils.h"
+#include "cfonb_validator.h"
 
 int main() {
-    /*Arguments args;
+
+    FichierCFONB* fichier = chargerFichier("D://data//file (13).txt");
+    if (fichier == NULL)
+        printf("Error parsing file!\n");
+    else {
+            for (int k=0;k<fichier->nbBlocs;++k) {
+                RapportValidation rapport = validerStructureBloc(&fichier->blocs[k]);
+                printf("\n\n ~~~~~~~~~~~~~Bloc%d~~~~~~~~~~~~~~~~~~~~~~~~~ : \n\n", k+1);
+                printf("\n*****%s*******\n",rapport.messageErreur);
+                if (rapport.resultat == VALID_OK) {
+                    rapport = validerCoherenceCompte(&fichier->blocs[k]);
+                    printf("\n*****%s*******\n",rapport.messageErreur);
+                    printf("\n\n-----------------solde-01--------------------\n\n");
+                    printf("code banque : %s\n",fichier->blocs[k].ancienSolde.codeBanque);
+                    printf("code guichet : %s\n",fichier->blocs[k].ancienSolde.codeGuichet);
+                    printf("Numero de compte : %s\n",fichier->blocs[k].ancienSolde.numeroCompte);
+                    printf("Date : %d - %d - %d\n",fichier->blocs[k].ancienSolde.date.jour,
+                        fichier->blocs[k].ancienSolde.date.mois,fichier->blocs[k].ancienSolde.date.annee);
+                    printf("titulaire : %s\n",fichier->blocs[k].ancienSolde.titulaire);
+                    afficherMontant(fichier->blocs[k].ancienSolde.solde);
+                    printf("devise : %s\n",fichier->blocs[k].ancienSolde.devise);
+                    printf("\n\n-----------------operation-04 & 05--------------------\n\n");
+                        for (int i = 0; i < fichier->blocs[k].nbOperations; i++) {
+                            printf("===========operation %d=============\n",i+1);
+                            printf("numero de compte : %s\n",fichier->blocs[k].operations[i].numeroCompte);
+                            printf("Code operation : %s\n",fichier->blocs[k].operations[i].codeOperation);
+                            printf("Date operation : %d - %d - %d\n",fichier->blocs[k].operations[i].dateOperation.jour,
+                                fichier->blocs[k].operations[i].dateOperation.mois,fichier->blocs[k].operations[i].dateOperation.annee);
+                            printf("Date valeur : %d - %d - %d\n",fichier->blocs[k].operations[i].dateValeur.jour,
+                                fichier->blocs[k].operations[i].dateValeur.mois,fichier->blocs[k].operations[i].dateValeur.annee);
+                            printf("Libelle : %s\n",fichier->blocs[k].operations[i].libelle);
+                            afficherMontant(fichier->blocs[k].operations[i].montant);
+                            printf("reference : %s\n",fichier->blocs[k].operations[i].reference);
+                            for (int j = 0;j<fichier->blocs[k].operations[i].nbComplements%6;++j)
+                                printf("complement : %s\n",fichier->blocs[k].operations[i].complements[j]);
+                        }
+                    printf("\n\n-----------------cloture-07--------------------\n\n");
+                    printf("code banque : %s\n",fichier->blocs[k].nouveauSolde.codeBanque);
+                    printf("code guichet : %s\n",fichier->blocs[k].nouveauSolde.codeGuichet);
+                    printf("Numero de compte : %s\n",fichier->blocs[k].nouveauSolde.numeroCompte);
+                    printf("Date : %d - %d - %d\n",fichier->blocs[k].nouveauSolde.date.jour,
+                        fichier->blocs[k].nouveauSolde.date.mois,fichier->blocs[k].nouveauSolde.date.annee);
+                    afficherMontant(fichier->blocs[k].nouveauSolde.solde);
+                    printf("devise : %s\n",fichier->blocs[k].nouveauSolde.devise);
+                }
+            }
+    }
+    libererFichier(fichier);
+    return 0;
+}
+
+
+/*Arguments args;
     int resultat = parserArguments(argc, argv, &args);
     if (resultat <= 0) {
         afficherUsage(argv[0]);
@@ -38,47 +88,3 @@ int main() {
         afficherUsage(argv[0]);
         return 1;
     }*/
-    FILE*fp = fopen("C://Users//NICKSON//CLionProjects//CFONB_Analyser_Tchinda_Fotsa_Nickson//file.txt", "r");
-    if (fp == NULL)
-        printf("Error opening file!\n");
-    else {
-        char line[120];
-        fgets(line, 120, fp);
-        printf("%s\n", line);
-
-        InfoCompte*info = (InfoCompte*)malloc(sizeof(InfoCompte));
-        Operation*op = (Operation*)malloc(sizeof(Operation));
-        if (parseInfoCompte(line,info))
-            printf("Erreur de parsing");
-        else {
-            printf("code banque : %s\n",info->codeBanque);
-            printf("code guichet : %s\n",info->codeGuichet);
-            printf("Numero de compte : %s\n",info->numeroCompte);
-            printf("Date : %d - %d - %d\n",info->date.jour,info->date.mois,info->date.annee);
-            printf("titulaire : %s\n",info->titulaire);
-            afficherMontant(info->solde);
-            printf("devise : %s\n",info->devise);
-            fgets(line, 120, fp);
-        }
-        if (parseOperation(line,op,fp))
-            printf("Erreur de parsing");
-        else {
-            printf("\n\n-----------------operation-04--------------------\n\n");
-            printf("%s\n", line);
-            printf("numero de compte : %s\n",op->numeroCompte);
-            printf("Code operation : %s\n",op->codeOperation);
-            printf("Date operation : %d - %d - %d\n",op->dateOperation.jour,op->dateOperation.mois,op->dateOperation.annee);
-            printf("Date valeur : %d - %d - %d\n",op->dateValeur.jour,op->dateValeur.mois,op->dateValeur.annee);
-            printf("Libelle : %s\n",op->libelle);
-            afficherMontant(op->montant);
-            printf("reference : %s\n",op->reference);
-            for (int i = 0;i<op->nbComplements;i++)
-                printf("complement : %s\n",op->complements[i]);
-
-        }
-        fgets(line, 120, fp);
-        printf("%s\n", line);
-        }
-    return 0;
-
-}
