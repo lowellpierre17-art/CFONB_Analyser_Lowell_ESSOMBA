@@ -7,11 +7,11 @@
 
 int main() {
 
-    FichierCFONB* fichier = chargerFichier("D://data//file (13).txt");
+    FichierCFONB* fichier = chargerFichier("D://data//file (30).txt");
     if (fichier == NULL)
         printf("Error parsing file!\n");
     else {
-        afficherRapport(fichier);
+        afficherChargement(fichier);
     }
     libererFichier(fichier);
     return 0;
