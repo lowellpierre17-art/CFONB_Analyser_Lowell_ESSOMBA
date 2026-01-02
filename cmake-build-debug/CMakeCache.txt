@@ -37,33 +37,22 @@ CMAKE_BUILD_TYPE:STRING=Debug
 CMAKE_COLOR_DIAGNOSTICS:BOOL=ON
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/gcc.exe
-
-//A wrapper around 'ar' adding the appropriate '--plugin' option
-// for the GCC compiler
-CMAKE_C_COMPILER_AR:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/gcc-ar.exe
-
-//A wrapper around 'ranlib' adding the appropriate '--plugin' option
-// for the GCC compiler
-CMAKE_C_COMPILER_RANLIB:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/gcc-ranlib.exe
+CMAKE_C_COMPILER:STRING=C:/Users/NICKSON/CLionProjects/CFONB_Analyser_Tchinda_Fotsa_Nickson
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
 
 //Flags used by the C compiler during DEBUG builds.
-CMAKE_C_FLAGS_DEBUG:STRING=-g
+CMAKE_C_FLAGS_DEBUG:STRING=
 
 //Flags used by the C compiler during MINSIZEREL builds.
-CMAKE_C_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
+CMAKE_C_FLAGS_MINSIZEREL:STRING=
 
 //Flags used by the C compiler during RELEASE builds.
-CMAKE_C_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
+CMAKE_C_FLAGS_RELEASE:STRING=
 
 //Flags used by the C compiler during RELWITHDEBINFO builds.
-CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
-
-//Libraries linked by default with all C applications.
-CMAKE_C_STANDARD_LIBRARIES:STRING=-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/dlltool.exe
@@ -85,9 +74,6 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/NICKSON/CLionProjects/CFONB_Analyser_Tchinda_Fotsa_Nickson/cmake-build-debug/CMakeFiles/pkgRedirects
-
-//Convert GNU import libraries to MS format (requires Visual Studio)
-CMAKE_GNUtoMS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/CFONB_Analyzer
@@ -138,24 +124,6 @@ CMAKE_PROJECT_NAME:STATIC=CFONB_Analyzer
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/ranlib.exe
-
-//RC compiler
-CMAKE_RC_COMPILER:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/windres.exe
-
-//Flags for Windows Resource Compiler during all build types.
-CMAKE_RC_FLAGS:STRING=
-
-//Flags for Windows Resource Compiler during DEBUG builds.
-CMAKE_RC_FLAGS_DEBUG:STRING=
-
-//Flags for Windows Resource Compiler during MINSIZEREL builds.
-CMAKE_RC_FLAGS_MINSIZEREL:STRING=
-
-//Flags for Windows Resource Compiler during RELEASE builds.
-CMAKE_RC_FLAGS_RELEASE:STRING=
-
-//Flags for Windows Resource Compiler during RELWITHDEBINFO builds.
-CMAKE_RC_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
 CMAKE_READELF:FILEPATH=D:/INSTALLED/Clion/CLion 2025.2.5/bin/mingw/bin/readelf.exe
@@ -244,10 +212,6 @@ CMAKE_CPACK_COMMAND:INTERNAL=D:/INSTALLED/Clion/CLion 2025.2.5/bin/cmake/win/x64
 CMAKE_CTEST_COMMAND:INTERNAL=D:/INSTALLED/Clion/CLion 2025.2.5/bin/cmake/win/x64/bin/ctest.exe
 //ADVANCED property for variable: CMAKE_C_COMPILER
 CMAKE_C_COMPILER-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_COMPILER_AR
-CMAKE_C_COMPILER_AR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_COMPILER_RANLIB
-CMAKE_C_COMPILER_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS
 CMAKE_C_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_DEBUG
@@ -258,8 +222,6 @@ CMAKE_C_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_RELWITHDEBINFO
 CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_STANDARD_LIBRARIES
-CMAKE_C_STANDARD_LIBRARIES-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_DLLTOOL
 CMAKE_DLLTOOL-ADVANCED:INTERNAL=1
 //Executable file format
@@ -315,19 +277,6 @@ CMAKE_OBJDUMP-ADVANCED:INTERNAL=1
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_RANLIB
 CMAKE_RANLIB-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_RC_COMPILER
-CMAKE_RC_COMPILER-ADVANCED:INTERNAL=1
-CMAKE_RC_COMPILER_WORKS:INTERNAL=1
-//ADVANCED property for variable: CMAKE_RC_FLAGS
-CMAKE_RC_FLAGS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_RC_FLAGS_DEBUG
-CMAKE_RC_FLAGS_DEBUG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_RC_FLAGS_MINSIZEREL
-CMAKE_RC_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_RC_FLAGS_RELEASE
-CMAKE_RC_FLAGS_RELEASE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_RC_FLAGS_RELWITHDEBINFO
-CMAKE_RC_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_READELF
 CMAKE_READELF-ADVANCED:INTERNAL=1
 //Path to CMake installation.
