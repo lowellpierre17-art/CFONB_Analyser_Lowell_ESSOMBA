@@ -1,13 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
 #include "cfonb_parser.h"
 #include "cfonb_stats.h"
 #include "cfonb_types.h"
 #include "cfonb_utils.h"
 #include "cfonb_validator.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     Arguments args;
     int resultat = parserArguments(argc, argv, &args);
     if (resultat <= 0) {
@@ -25,7 +25,6 @@ int main(int argc, char *argv[]) {
     }
     else if (strcmp(args.commande, "stats") == 0) {
         afficherStats(args.fichier);
-        printf("Statistiques de %s...\n", args.fichier);
     }
     else if (strcmp(args.commande, "search") == 0) {
         afficherRechercherOperations(args.fichier, &args);

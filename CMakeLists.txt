@@ -10,7 +10,10 @@ include_directories(include)
 add_executable(CFONB_Analyzer main.c
         cfonb_stats.c
         cfonb_validator.c
+        cfonb_validator.h
         cfonb_parser.c
+        cfonb_parser.h
+        cfonb_types.h
         cfonb_utils.h
         cfonb_stats.h
         cfonb_utils.c)
