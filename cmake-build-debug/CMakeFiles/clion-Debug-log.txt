@@ -1,4 +1,13 @@
 "D:\INSTALLED\Clion\CLion 2025.2.5\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles" -S C:\Users\NICKSON\CLionProjects\CFONB_Analyser_Tchinda_Fotsa_Nickson -B C:\Users\NICKSON\CLionProjects\CFONB_Analyser_Tchinda_Fotsa_Nickson\cmake-build-debug
--- Configuring done (1.3s)
--- Generating done (0.4s)
+CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+-- Configuring done (1.1s)
+-- Generating done (0.1s)
 -- Build files have been written to: C:/Users/NICKSON/CLionProjects/CFONB_Analyser_Tchinda_Fotsa_Nickson/cmake-build-debug
