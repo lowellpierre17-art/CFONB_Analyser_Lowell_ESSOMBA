@@ -137,3 +137,10 @@ La compréhension du code,
 La maintenance,
 L'évolution future (ajout de règles, nouveaux contrôles, nouveaux formats).
 Le projet respecte ainsi une logique professionnelle de traitement de données financières structurées.
+
+**9. Difficulté rencontrée**
+La gestion fine de la lecture séquentielle des lignes du fichier CFONB est à évaluer avec précaution.
+Dans mon cas, je rencontre un défaut de lecture des compléments de la premiere opération de chaque bloc.
+Afin de palier à ce défaut, lors du parsing, j'ai structuré le flux de lecture dans l'optique d'évaluer le type de ligne 
+après chaque lecture d'une ligne. Jusque là, je n'ai toujours pas pu remedier à cette anomalie. Cet élément 
+fut juste constaté sans rétroaction afin de ne pas créer de disfonctionnements dans le programme global.
