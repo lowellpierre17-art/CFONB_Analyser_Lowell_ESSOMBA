@@ -120,20 +120,22 @@ long montantMin,DateCFONB* date,int* nbResultats){
 }
 //Affiche les resultats des opérations en prenant un parametre le tableau d'opération déja constitué
 // et les critères sur lesquels se sont basées les recherches
-void afficheResultats(Operation**operation, char* option, char* valeur, int nbOperations) {
+void afficheResultats(Operation**operation, char* option, char* valeur, int nbOperations, short verbose) {
         printf("Critere : %s = %s\n",option,valeur);
     if (operation == NULL || nbOperations == 0) {
         printf("Aucun resultat trouve.\n");
     }
     else {
         printf("Resultats : %d operation(s) trouvees(s)\n",nbOperations);
-        printf("Date          | Montant          | Libelle\n");
+        printf("Date          | Montant            | Libelle\n");
         printf("------------------------------------------------------------------\n");
         for (int i =0; i<nbOperations; i++) {
-            printf("%d-%d-%d       |",operation[i]->dateOperation.jour,operation[i]->dateOperation.mois,operation[i]->dateOperation.annee);
+            printf("%2d-%2d-%2d      |",operation[i]->dateOperation.jour,operation[i]->dateOperation.mois,operation[i]->dateOperation.annee);
             float montant = (float)operation[i]->montant.centimes/100;
             printf("%10.2f €      |",operation[i]->montant.sens==SENS_CREDIT ? montant: (-1*montant));
             printf("%s\n",operation[i]->libelle);
+            for (int j =0; j<(verbose*operation[i]->nbComplements)%6; j++)
+                printf("                                    |%s\n",operation[i]->complements[j]);
         }
     }
 }
@@ -148,20 +150,20 @@ void afficherRechercherOperations(char* srcFichier,Arguments* args) {
         int nbResultats = 0;
         if (strlen(args->numeroCompte) == 11) {
             Operation** operation = rechercherOperations(fichier,args->numeroCompte,0,NULL,&nbResultats);
-            afficheResultats(operation,"Compte",args->numeroCompte,nbResultats);
+            afficheResultats(operation,"Compte",args->numeroCompte,nbResultats,args->verbose);
             free(operation); operation = NULL;
         }
         if (strlen(args->date) == 6) {
             DateCFONB date = parseDate(args->date);
             Operation** operation = rechercherOperations(fichier,NULL,0,&date,&nbResultats);
-            afficheResultats(operation,"Date",args->date,nbResultats);
+            afficheResultats(operation,"Date",args->date,nbResultats,args->verbose);
             free(operation); operation = NULL;
         }
         if (args->montantMin>=0) {
             char montantStr[10];
             sprintf(montantStr,"%ld",args->montantMin);
             Operation** operation = rechercherOperations(fichier,NULL,args->montantMin,NULL,&nbResultats);
-            afficheResultats(operation,"Montant",montantStr,nbResultats);
+            afficheResultats(operation,"Montant",montantStr,nbResultats,args->verbose);
             free(operation); operation = NULL;
         }
     }

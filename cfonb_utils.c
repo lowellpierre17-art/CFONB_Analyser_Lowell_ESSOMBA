@@ -21,14 +21,15 @@ void afficherUsage(const char *nomProgramme) {
 }
 
 //il me faudra rajouter le fait que si le numero de compte n'a pas été ajouté, alors j'attribue NULL à cette chaine
-void afficherArgument(Arguments * args) {
+void afficherArguments(Arguments * args) {
     // Afficher ce qu'on a compris
     if (!args) printf("Argument vide");
     else {
         printf("Commande : %s\n", args->commande);
         printf("Fichier : %s\n", args->fichier);
-        printf("Filtre compte : %s\n", (strlen(args->numeroCompte)!=11) ? args->numeroCompte : "(aucun)");
-        printf("Montant min : %ld\n", args->montantMin);
+        printf("Filtre compte : %s\n", (strlen(args->numeroCompte)==11) ? args->numeroCompte : "(aucun)");
+        printf("Montant min : %ld\n", args->montantMin>0? args->montantMin: 0);
+        printf("Date : %s\n", strlen(args->date)==6 ? args->date : "(aucune)");
         printf("Mode verbose : %s\n", args->verbose ? "oui" : "non");
     }
 }

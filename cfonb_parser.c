@@ -139,19 +139,22 @@ int parseComplement(const char* ligne, Operation* op)
  */
 int parseBloc(FILE*f,BlocCompte*compte) {
     char line[size_file_cfonb];
-    if (fgets(line, size_file_cfonb, f)) {
-        if (parseInfoCompte(line,&compte->ancienSolde))
-            return 1;
-    }
+    if (!fgets(line, size_file_cfonb, f))
+        return 1;
+    if (parseInfoCompte(line,&compte->ancienSolde))
+        return 1;
 
-    fgets(line, size_file_cfonb, f);
+    if(!fgets(line, size_file_cfonb, f)) return 1;
     while(detecterTypeLigne(line)!=RECORD_NEW_BALANCE) {
-        Operation operation = {0};
+        Operation operation;
+        memset(&operation, 0, sizeof(operation));
         if (parseOperation(line,&operation)!=0)
             return 1;
-        while (fgets(line, size_file_cfonb, f) && detecterTypeLigne(line)==RECORD_COMPLEMENT) {
+        if(!fgets(line, size_file_cfonb, f)) return 1;
+        while (detecterTypeLigne(line)==RECORD_COMPLEMENT) {
             if (parseComplement(line,&operation)!=0)
                     return 1;
+            if(!fgets(line, size_file_cfonb, f)) return 1;
         }
         if (ajouterOperation(compte,operation)!=0)
             return 1;
