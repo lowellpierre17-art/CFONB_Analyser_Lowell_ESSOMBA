@@ -18,7 +18,10 @@ int main(int argc, char* argv[]) {
     printf("\n");
     // Exécuter la commande demandée
     if (strcmp(args.commande, "load") == 0) {
-        chargerEtAfficher(args.fichier);
+        FichierCFONB*fichier = chargerFichier(args.fichier);
+        if (!fichier) printf("Echec de chargement\n");
+        else
+        chargerficher(fichier);
     }
     else if (strcmp(args.commande, "validate") == 0) {
         afficherValiderFichier(args.fichier);

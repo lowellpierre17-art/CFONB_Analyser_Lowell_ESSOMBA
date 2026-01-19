@@ -19,7 +19,5 @@ FichierCFONB* creerFichier(const char* nom);
 // Ajouter un bloc (avec réallocation si nécessaire)
 int ajouterBloc(FichierCFONB* fichier, BlocCompte bloc);
 //Initialisation d'un bloc
-BlocCompte* creerBloc();
-//Ajouter une operation (avec reallocation si necessaire)
-int ajouterOperation(BlocCompte*bloc, Operation operation);
+BlocCompte* nouveauBloc();
 #endif

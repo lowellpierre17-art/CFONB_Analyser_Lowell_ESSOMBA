@@ -49,31 +49,16 @@ int parserArguments(int argc, char *argv[], Arguments *args) {
     return 1;  // Succès
 }
 
-/*
- *La fonction analyse les deux premiers caractères de la ligne et restitue un type selon un certain enregistrement
- *Si la ligne ne débute pas avec un '0', alors elle renvoie un type inconnu de même si le caractère suivant ne correspond
- * pas à ceux définis dans le format CFonb120
- */
+
 RecordType detecterTypeLigne(const char* ligne) {
-    RecordType detector;
-    if (ligne[0]=='0') {
-         switch (ligne[1]) {
-            case '1': detector = RECORD_OLD_BALANCE; break;
-            case '4': detector = RECORD_OPERATION; break;
-            case '5': detector = RECORD_COMPLEMENT; break;
-            case '7': detector = RECORD_NEW_BALANCE; break;
-            default: detector = RECORD_UNKOWN; break;
-        }
+    switch (ligne[1]) {
+        case '1': return RECORD_OLD_BALANCE;
+        case '4': return RECORD_OPERATION;
+        case '5': return RECORD_COMPLEMENT;
     }
-    else
-        detector = RECORD_UNKOWN;
-    return detector;
+	return RECORD_NEW_BALANCE;
 }
-// Parse un enregistrement 01 ou 07
-/*
- * La fonction retourne 1 si la ligne du fichier passé en argument est vide
- * Retourne 0 si le fichier est lisible et stocke les données utiles dans la structure adaptée.
- */
+
 int parseInfoCompte(const char* ligne, InfoCompte* info) {
     if (ligne==NULL)
         return 1;
@@ -88,27 +73,23 @@ int parseInfoCompte(const char* ligne, InfoCompte* info) {
     extraireChamp(ligne,35,40,datestr);
     info->date = parseDate(datestr);
     extraireChamp(ligne,41,90,info->titulaire);
-    char montantstr[15];
-    extraireChamp(ligne,91,104,montantstr);
-    info->solde = decoderMontant(montantstr,info->nbDecimales);
+    char prix[15];
+    extraireChamp(ligne,91,104,prix);
+    info->solde = decoderMontant(prix,info->nbDecimales);
     return 0;
 
 }
-// Parse un enregistrement 04
-/*
- * La fonction retourne 1 si la ligne du fichier passé en argument est vide
- * Retourne 0 si le fichier est lisible et stocke les données utiles dans la structure adaptée (opération).
- */
+
 int parseOperation(const char* ligne, Operation* op) {
     if (ligne==NULL)
         return 1;
     extraireChamp(ligne,22,32,op->numeroCompte);
     extraireChamp(ligne,33,34,op->codeOperation);
-    char datestr[7];
-    extraireChamp(ligne,35,40,datestr);
-    op->dateOperation = parseDate(datestr);
-    extraireChamp(ligne,43,48,datestr);
-    op->dateValeur = parseDate(datestr);
+    char Date[7];
+    extraireChamp(ligne,35,40,Date);
+    op->dateOperation = parseDate(Date);
+    extraireChamp(ligne,43,48,Date);
+    op->dateValeur = parseDate(Date);
     extraireChamp(ligne,49,80,op->libelle);
     char montantstr[14];
     extraireChamp(ligne,92,104,montantstr);
@@ -120,70 +101,66 @@ int parseOperation(const char* ligne, Operation* op) {
     return 0;
 }
 
-/*Parse un enregistrement 05 et l'ajoute à l'opération courante
- *Pour chaque complément, la fonction ajoute le libellé de ces différents compléments au tableau de compléments figurant
- * dans l'opération concernée
- */
 int parseComplement(const char* ligne, Operation* op)
 {
     if (ligne==NULL)
         return 1;
-    extraireChamp(ligne,49,118,op->complements[op->nbComplements++]);
+    extraireChamp(ligne,49,118,op->complements[op->nbComplements]);
+	op->nbComplements +=1;
     return 0;
 }
 
-/*
- *La fonction lit une ligne et la considère comme solde initial ensuite,
- *vérifie que les lignes suivantes ne correspondent pas à un nouveau solde et les enregistre comme des opérations et
- *comme des compléments. Sinon, elle lit la ligne suivante comme nouveau solde.
- */
+
 int parseBloc(FILE*f,BlocCompte*compte) {
-    char line[size_file_cfonb];
-    if (!fgets(line, size_file_cfonb, f))
-        return 1;
-    if (parseInfoCompte(line,&compte->ancienSolde))
+    char ligne[120];
+    fgets(ligne,120, f);
+    if (parseInfoCompte(ligne,&compte->ancienSolde))
         return 1;
 
-    if(!fgets(line, size_file_cfonb, f)) return 1;
-    while(detecterTypeLigne(line)!=RECORD_NEW_BALANCE) {
-        Operation operation;
-        memset(&operation, 0, sizeof(operation));
-        if (parseOperation(line,&operation)!=0)
+    if(!fgets(ligne,120, f)) return 1;
+    while(detecterTypeLigne(ligne)!=RECORD_NEW_BALANCE) {
+        Operation op;
+        memset(&op, 0, sizeof(op));
+        if (parseOperation(ligne,&op)!=0)
             return 1;
-        if(!fgets(line, size_file_cfonb, f)) return 1;
-        while (detecterTypeLigne(line)==RECORD_COMPLEMENT) {
-            if (parseComplement(line,&operation)!=0)
+        if(!fgets(ligne, 120, f)) return 1;
+        while (detecterTypeLigne(ligne)==RECORD_COMPLEMENT) {
+            if (parseComplement(ligne,&op)!=0)
                     return 1;
-            if(!fgets(line, size_file_cfonb, f)) return 1;
+            if(!fgets(ligne, 120, f)) return 1;
         }
-        if (ajouterOperation(compte,operation)!=0)
-            return 1;
+    	if (compte->nbOperations >= compte->capaciteOperations) {
+        compte->capaciteOperations *= 2;
+        Operation* nouveau = realloc(compte->operations,compte->capaciteOperations * sizeof(Operation));
+        if (!nouveau) return 1;
+        compte->operations = nouveau;
+    }
+    compte->operations[compte->nbOperations++] = op;
+
     }
 
-    if (parseInfoCompte(line,&compte->nouveauSolde)!=0)
+    if (parseInfoCompte(ligne,&compte->nouveauSolde)!=0)
             return 1;
     return 0;
 }
 
-/*
- *En utilisant le mode restitution de '0' impliquant que le résultat est valide, tant que les résultats des différentes
- *opérations de parsing ne sont pas nuls, alors la constitution du fichier complet se poursuit par ajouts des
- *differents blocs
- */
+
 FichierCFONB* chargerFichier(const char* nomFichier) {
     FILE* f = fopen(nomFichier,"r");
     if (!f) return NULL;
-    bool parsingBlocs = true;
+    bool valid = true;
     FichierCFONB* fichier = creerFichier(nomFichier);
-    while (parsingBlocs) {
-        BlocCompte*bloc = creerBloc();
+    while (valid) {
+
+        BlocCompte*bloc = nouveauBloc();
+
         if (bloc!=NULL) {
-            if (parseBloc(f,bloc)==0) {
-                if (ajouterBloc(fichier,*bloc)!=0)
-                    parsingBlocs = false;
-            }
-            else
-                parsingBlocs = false;
+            if (parseBloc(f,bloc)==0 && ajouterBloc(fichier,*bloc)!=0)
+               valid = false;
+            else if (parseBloc(f,bloc)!=0)
+            	valid = false;
+			else
+				valid = true;
         }
         free(bloc);
         bloc = NULL;
@@ -197,15 +174,8 @@ void libererFichier(FichierCFONB* fichier) {
     fichier = NULL;
 }
 
-/*
- *Cette fonction permet restituer l'analyse du fichier chargé en fonction du nom (la source) du fichier
- *Elle se sert de la constituion complete du fichier afin de fournir les résultats
- */
-void chargerEtAfficher(char* srcFichier) {
+void chargerficher(FichierCFONB*fichier) {
     printf("\n=== CHARGEMENT CFONB ===\n\n");
-    FichierCFONB*fichier = chargerFichier(srcFichier);
-    if (!fichier) printf("Echec de chargement\n");
-    else {
         printf("Fichier : %s\n",fichier->nomFichier);
         int nbEnregistrements = 0, nbOperations = 0, nbComplements = 0;
         for (int i =0;i<fichier->nbBlocs;++i) {
@@ -221,6 +191,4 @@ void chargerEtAfficher(char* srcFichier) {
         printf("  - Type 07 (nouveau solde) : %d\n",fichier->nbBlocs);
         printf("Blocs de comptes détectés: %d\n",fichier->nbBlocs);
         printf("Chargement réussi.\n");
-    }
-    libererFichier(fichier);
 }

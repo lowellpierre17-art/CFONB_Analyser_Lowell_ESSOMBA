@@ -7,7 +7,6 @@ typedef enum {
     RECORD_OPERATION = 4,      // 04 - Opération
     RECORD_COMPLEMENT = 5,     // 05 - Complément
     RECORD_NEW_BALANCE = 7,     // 07 - Nouveau solde
-    RECORD_UNKOWN               // Operation non-reconnue
 } RecordType;
 // Sens de l'opération
 typedef enum {
@@ -106,5 +105,4 @@ typedef struct {
     int ligneErreur;
     char messageErreur[256];
 } RapportValidation;
-#define size_file_cfonb 122
 #endif

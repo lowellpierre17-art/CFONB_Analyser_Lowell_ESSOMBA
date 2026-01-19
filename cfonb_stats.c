@@ -6,10 +6,6 @@
 #include "cfonb_types.h"
 #include "cfonb_utils.h"
 
-/*
- *Cette fonction récupère un bloc, parcourt ses différents parametres, filtre et construit les parametres d'une
- *structure de statistiques
- */
 StatsCompte calculerStatsBloc(BlocCompte* bloc) {
     StatsCompte stat = {0};
     strcpy(stat.numeroCompte,bloc->ancienSolde.numeroCompte);
@@ -60,11 +56,7 @@ void afficherStats(char* srcFichier) {
 Operation** rechercherOperations(FichierCFONB* fichier,const char* numeroCompte,
 long montantMin,DateCFONB* date,int* nbResultats){
     Operation** operation = NULL;
-/*Effectue une recherche en fonction des correspondances des numéros de compte.
- *Elle prend comme reference le numero de compte de l'ancien solde (étant donné qu'il est commun à toutes les opérations)
- *Et recence toute les opérations de ce bloc
- */
-    if (numeroCompte != NULL) {
+if (numeroCompte != NULL) {
         for (int k =0; k<fichier->nbBlocs;++k) {
             if (strcmp(fichier->blocs[k].ancienSolde.numeroCompte,numeroCompte) == 0) {
                 Operation ** nouveau = realloc(operation, sizeof(Operation*)*(*nbResultats + fichier->blocs[k].nbOperations));
@@ -73,14 +65,10 @@ long montantMin,DateCFONB* date,int* nbResultats){
                 for (int j =*nbResultats; j<*nbResultats+fichier->blocs[k].nbOperations; ++j) {
                     operation[j] = &fichier->blocs[k].operations[j-*nbResultats];
                 }
-                *nbResultats+=fichier->blocs[k].nbOperations;
-            }
+                *nbResultats+=fichier->blocs[k].nbOperations;}
         }
-    }
-/*
- *Parcourt les opérations de chaque bloc et vérifie l'ordre de supériorité ou d'égalité avec chacun des montants
- * correspondant à ces opérations et enregistre ceux qui y sont supérieurs ou égaux
- */
+}
+
     else if (montantMin > 0) {
         for (int k =0; k<fichier->nbBlocs;++k) {
             for (int j = 0; j<fichier->blocs[k].nbOperations; ++j) {
@@ -94,10 +82,6 @@ long montantMin,DateCFONB* date,int* nbResultats){
             }
         }
     }
-/*
- *Pour chacune des ioérations provenant des blocs distincts, vérifie la concordance exacte avec les date opération et
- *les enregistre si ces dates sont égales
- */
     else if (date!=NULL) {
         for (int k =0; k<fichier->nbBlocs;++k) {
             for (int j = 0; j<fichier->blocs[k].nbOperations; ++j) {
@@ -118,8 +102,6 @@ long montantMin,DateCFONB* date,int* nbResultats){
     }
     return operation;
 }
-//Affiche les resultats des opérations en prenant un parametre le tableau d'opération déja constitué
-// et les critères sur lesquels se sont basées les recherches
 void afficheResultats(Operation**operation, char* option, char* valeur, int nbOperations, short verbose) {
         printf("Critere : %s = %s\n",option,valeur);
     if (operation == NULL || nbOperations == 0) {

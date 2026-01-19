@@ -6,11 +6,9 @@
 #include "cfonb_parser.h"
 #include "cfonb_types.h"
 
-// Valide la structure d'un bloc (séquence 01-04-07)
+
 RapportValidation validerStructureBloc(BlocCompte* bloc) {
     RapportValidation rapport = { VALID_OK, 0, "Structure valide  Ok" };
-    // Vérification de la validité du format du numéro de compte et du code banque
-    // ainsi que la présence des deux premiers caractères du nom du titulaire du compte
     char verifierEspace[3];
     strncpy(verifierEspace, bloc->ancienSolde.titulaire, 2);verifierEspace[2] = '\0';
     if (strlen(bloc->ancienSolde.numeroCompte) !=11 || strlen(bloc->ancienSolde.codeBanque) != 5
@@ -19,8 +17,6 @@ RapportValidation validerStructureBloc(BlocCompte* bloc) {
         strcpy(rapport.messageErreur, "Ancien solde invalide ou absent!!");
         return rapport;
         }
-    //Vérifie la validité du format du numéro de compte, du code banque et
-    //s'assure de l'égalité des codes banque de l'ancien et le nouveau solde
     if (strcmp(bloc->nouveauSolde.codeBanque,bloc->ancienSolde.codeBanque)!=0 || strlen(bloc->nouveauSolde.codeBanque) != 5
        || strlen(bloc->nouveauSolde.numeroCompte) !=11)
         {
@@ -49,8 +45,6 @@ RapportValidation validerStructureBloc(BlocCompte* bloc) {
 // Vérifie la cohérence du numéro de compte
 RapportValidation validerCoherenceCompte(BlocCompte* bloc) {
     RapportValidation rapport = { VALID_OK, 0, "Cohérence compte  Ok" };
-    //Etant donné qu'une comparaison de numéro de compte ne puisse être faite, on s'assure juste de valider le format
-    //du numéro de compte de l'ancien solde
     if (strlen(bloc->ancienSolde.numeroCompte)!=11) {
         rapport.resultat = VALID_ERR_COMPTE;
         strcpy(rapport.messageErreur, "Numero de compte d'ouverture invalide");
@@ -105,8 +99,6 @@ RapportValidation validerSolde(BlocCompte* bloc) {
     return rapport;
 }
 
-
-// Construit un tableau de rapports pour chaque bloc d'un fichier CFonb sachant que pour chaque bloc l'on obtient 03 rapports
 RapportValidation* validerFichier(FichierCFONB* fichier, int* nbRapports){
     if (!fichier || !nbRapports)
         return NULL;

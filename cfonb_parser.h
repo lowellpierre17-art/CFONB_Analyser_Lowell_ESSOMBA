@@ -18,5 +18,5 @@ void libererFichier(FichierCFONB* fichier);
 // Parse les blocs dans un fichier de 01 jusqu'a 07
 int parseBloc(FILE*f,BlocCompte*compte);
 //Affiche le chargement du fichier
-void chargerEtAfficher(char* );
+void chargerficher(FichierCFONB*);
 #endif

@@ -20,7 +20,6 @@ void afficherUsage(const char *nomProgramme) {
     printf("  --help, -h           Afficher cette aide\n");
 }
 
-//il me faudra rajouter le fait que si le numero de compte n'a pas été ajouté, alors j'attribue NULL à cette chaine
 void afficherArguments(Arguments * args) {
     // Afficher ce qu'on a compris
     if (!args) printf("Argument vide");
@@ -94,13 +93,18 @@ void extraireChamp(const char* ligne, int debut, int fin, char* dest) {
 // Affichage formaté d'un montant
 void afficherMontant(Montant m) {
     double valeur = (double)m.centimes/100;
-    printf("%.2f € %s\n",valeur,(m.sens == SENS_CREDIT) ? "(CR)" : "(DB)");
+    if (m.sens == SENS_CREDIT)
+        printf("%.2f € (CR)\n",valeur);
+    else
+        printf("%.2f € (DB)\n",valeur);
 
 }
 // Comparaison de dates
-//cette fonction retourne 0 si la date d1 est superieur ou égale à d2 et 1 dans le cas inverse
+//cette fonction retourne 0 si la date d1  égale à d2 et 1 dans le cas inverse
 int comparerDates(DateCFONB d1, DateCFONB d2) {
-    return(d1.annee==d2.annee && d1.mois == d2.mois && d1.jour == d2.jour)? 0:1;
+    if(d1.annee==d2.annee && d1.mois == d2.mois && d1.jour == d2.jour)
+        return 0;
+    return 1;
 }
 
 // Initialisation d'un fichier CFONB
@@ -126,22 +130,11 @@ int ajouterBloc(FichierCFONB* fichier, BlocCompte bloc) {
     return 0;
 }
 //Initialisation d'un bloc pour l'allocation dynamique
-BlocCompte* creerBloc() {
+BlocCompte* nouveauBloc() {
     BlocCompte* bloc = malloc(sizeof(BlocCompte));
     if (!bloc) return NULL;
     bloc->capaciteOperations = 10;
     bloc->operations = malloc(bloc->capaciteOperations * sizeof(Operation));
     bloc->nbOperations = 0;
     return bloc;
-}
-//Ajouter une opération à un bloc
-int ajouterOperation(BlocCompte* bloc, Operation operation) {
-    if (bloc->nbOperations >= bloc->capaciteOperations) {
-        bloc->capaciteOperations *= 2;
-        Operation* nouveau = realloc(bloc->operations,bloc->capaciteOperations * sizeof(Operation));
-        if (!nouveau) return -1;
-        bloc->operations = nouveau;
-    }
-    bloc->operations[bloc->nbOperations++] = operation;
-    return 0;
 }
